@@ -70,6 +70,10 @@ export function getCardImageUrl({
         imgType = ImageType.Backdrop;
         imgTag = item.ParentBackdropImageTags[0];
         itemId = item.ParentBackdropItemId;
+    } else if (options.preferSeriesPoster && item.Type === 'Episode' && item.SeriesPrimaryImageTag && item.SeriesId) {
+        imgType = ImageType.Primary;
+        imgTag = item.SeriesPrimaryImageTag;
+        itemId = item.SeriesId;
     } else if (options.preferParentPoster && !options.preferThumb && item.Type === 'Episode'
         && ((item.ParentPrimaryImageTag && item.ParentPrimaryImageItemId) || (item.SeriesPrimaryImageTag && item.SeriesId))) {
         imgType = ImageType.Primary;

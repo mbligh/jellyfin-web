@@ -29,6 +29,8 @@ export interface CardOptions {
     preferDisc?: boolean;
     preferLogo?: boolean;
     preferParentPoster?: boolean;
+    /** Prefer the series Primary image for an episode (Next Up poster cards). */
+    preferSeriesPoster?: boolean;
     scalable?: boolean;
     shape?: CardShape;
     defaultShape?: CardShape;

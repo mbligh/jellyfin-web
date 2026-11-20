@@ -5,7 +5,7 @@ import type { ApiClient } from 'jellyfin-apiclient';
 
 import { getNextUpQuery } from 'apps/legacy/features/libraries/api/useNextUp';
 import cardBuilder from 'components/cardbuilder/cardBuilder';
-import { getBackdropShape } from 'components/cardbuilder/utils/shape';
+import { getBackdropShape, getPortraitShape } from 'components/cardbuilder/utils/shape';
 import layoutManager from 'components/layoutManager';
 import { appRouter } from 'components/router/appRouter';
 import globalize from 'lib/globalize';
@@ -57,9 +57,13 @@ function getNextUpItemsHtmlFn(
         const cardLayout = false;
         return cardBuilder.getCardsHtml({
             items: items,
-            preferThumb: true,
-            inheritThumb: !useEpisodeImages,
-            shape: getBackdropShape(enableOverflow),
+            // Next Up represents one episode per series: use the series poster
+            // to match the other home page TV cards unless explicitly overridden.
+            preferThumb: useEpisodeImages,
+            inheritThumb: false,
+            preferSeriesPoster: !useEpisodeImages,
+            preferParentPoster: !useEpisodeImages,
+            shape: useEpisodeImages ? getBackdropShape(enableOverflow) : getPortraitShape(enableOverflow),
             overlayText: false,
             showTitle: true,
             showParentTitle: true,
