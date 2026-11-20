@@ -158,6 +158,14 @@
     margin-right: 0.75em;
 }
 
+// Season episode rows use video-frame proportions rather than the 3:2
+// large-list thumbnail default. The width is still responsive.
+.listItemImage-large.listItemImage-widescreen {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
+}
+
 .listItemImage-channel {
     background-size: contain;
 }
@@ -229,6 +237,10 @@
 .listItemImage-large-tv {
     width: 30vw !important;
     height: 20vw !important;
+}
+
+.listItemImage-large-tv.listItemImage-widescreen {
+    height: auto !important;
 }
 
 .listItemIcon {

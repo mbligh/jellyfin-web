@@ -1454,6 +1454,7 @@ function renderChildren(page, item) {
                     enablePlayedButton: !layoutManager.mobile,
                     infoButton: !layoutManager.mobile,
                     imageSize: 'large',
+                    widescreenEpisodeImages: true,
                     enableSideMediaInfo: false,
                     highlight: false,
                     action: !layoutManager.desktop ? 'link' : 'none',

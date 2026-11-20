@@ -1,37 +1,48 @@
 # Jellyfin Web — mbligh patch
 
-## Goal
+## Requirements
 
-For Jellyfin Web 12.4, make the home page **Next Up** section behave like a series
-selector. Since Next Up normally contains one next episode per series, display
-the **series Primary poster in a portrait card**, not an episode screenshot in
-a landscape card. Keep the existing **Use episode images in 'Next Up' and
-'Continue Watching'** preference: enabling it restores landscape episode
-artwork in Next Up. Continue Watching and all other screens remain unchanged.
+Use a pinned Jellyfin Web **v12.4** frontend, with predictable image shapes
+across its media library while retaining the existing episode-image option:
+
+- **Next Up:** portrait series Primary poster by default; opt-in episode
+  thumbnails retain the original landscape presentation.
+- **Continue Watching (video):** portrait series Primary poster for episodes,
+  and the movie's own Primary poster for movies. The existing **Use episode
+  images in 'Next Up' and 'Continue Watching'** option switches back to
+  landscape thumbnails. Audio and books keep their previous rendering.
+- **Episodes within a season:** display video thumbnails in 16:9 instead of
+  the legacy 3:2 container, requesting 500x281-sized images rather than
+  500x500 square crops. If an episode has no image, retain the existing
+  fallback to the series/parent Primary image.
+- Keep the rest of Jellyfin Web unchanged and preserve existing settings.
 
 ## Implementation
 
-- Base this patch branch (`mbligh-v12.4`) on upstream Jellyfin Web tag `v12.4`.
-  Keep the upstream `master` branch untouched.
-- `nextUp.ts` selects a portrait card when episode images are disabled and a
-  landscape card when enabled.
-- New `preferSeriesPoster` card option selects an episode's `SeriesId` and
-  `SeriesPrimaryImageTag` ahead of its season or episode Primary artwork.
-  If the series has no Primary image, fall back to the existing parent/episode
-  image-selection behavior.
-- No server patches or JavaScript runtime dependencies are required on hosts.
-  The web client is built with Node.js 24, npm 11+, `npm ci`, and
-  `npm run build:production`.
+- Base this patch branch (`mbligh-v12.4`) on upstream Jellyfin Web tag
+  `v12.4`. Keep upstream `master` untouched.
+- `nextUp.ts` and `resume.ts` select portrait cards unless the episode
+  image preference is enabled; `resume.ts` applies it only to videos.
+- The `preferSeriesPoster` card option picks an episode's `SeriesId`
+  and `SeriesPrimaryImageTag` ahead of a season/episode Primary image.
+  If it has none, existing fallback behavior is preserved.
+- `itemDetails/index.js` opts season rows into `widescreenEpisodeImages`.
+  `listview.js` requests 16:9 scaled images for those rows, and
+  `listview.scss` sets a responsive 16:9 container (including TV layout).
+  Other large list thumbnails remain unchanged.
+- Node.js 24, npm 11+, `npm ci`, `npm run build:check`, and
+  `npm run build:production` are only required to build the frontend.
+  There are no Node/npm runtime dependencies.
 
 ## Delivery
 
-The `mbligh/apt` repository contains `packages/jellyfin-web/build.sh` and
+`mbligh/apt` contains `packages/jellyfin-web/build.sh` and
 `.github/workflows/package-jellyfin-web.yml`. The build fetches a **pinned**
-commit of this branch, compiles the frontend in a GitHub Actions runner, and
-packages `dist/` as an architecture-independent `jellyfin-web` .deb.
-The existing APT workflow stages the immutable package to Cloudflare R2 and
-requests a signed repository index update at https://apt.mbligh.org.
+commit from this branch, compiles the static frontend in GitHub Actions,
+and packages `dist/` as an architecture-independent `jellyfin-web` .deb.
+The existing APT workflow stages the package to Cloudflare R2 and signs
+the repository index at https://apt.mbligh.org.
 
-When updating the patch: commit it here, update the pinned commit in
-`mbligh/apt/packages/jellyfin-web/build.sh`, then trigger the APT package
-workflow. Do not use the upstream `master` branch for Jellyfin 12.4 builds.
+When updating the patch, commit here, update the pinned SHA in
+`mbligh/apt/packages/jellyfin-web/build.sh`, and trigger the APT package
+workflow. Source changes in the fork do not themselves trigger publication.

@@ -83,13 +83,13 @@ function getIndex(item, options) {
     return '';
 }
 
-function getImageUrl(item, size) {
+function getImageUrl(item, size, height = size) {
     const apiClient = ServerConnections.getApiClient(item.ServerId);
     let itemId;
 
     const options = {
         fillWidth: size,
-        fillHeight: size,
+        fillHeight: height,
         type: 'Primary'
     };
 
@@ -269,8 +269,14 @@ export function getListViewHtml(options) {
         }
 
         if (options.image !== false) {
-            const imgUrl = options.imageSource === 'channel' ? getChannelImageUrl(item, downloadWidth) : getImageUrl(item, downloadWidth);
+            const widescreenEpisodeImage = isLargeStyle && options.widescreenEpisodeImages && item.Type === 'Episode';
+            const imageHeight = widescreenEpisodeImage ? Math.round(downloadWidth * 9 / 16) : downloadWidth;
+            const imgUrl = options.imageSource === 'channel' ? getChannelImageUrl(item, downloadWidth) : getImageUrl(item, downloadWidth, imageHeight);
             let imageClass = isLargeStyle ? 'listItemImage listItemImage-large' : 'listItemImage';
+
+            if (widescreenEpisodeImage) {
+                imageClass += ' listItemImage-widescreen';
+            }
 
             if (options.imageSource === 'channel') {
                 imageClass += ' listItemImage-channel';

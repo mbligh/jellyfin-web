@@ -98,6 +98,7 @@ export interface CardOptions {
     enablePlayedButton?: boolean;
     infoButton?: boolean;
     imageSize?: string;
+    widescreenEpisodeImages?: boolean;
     enableSideMediaInfo?: boolean;
     imagePlayButton?: boolean;
     border?: boolean;

@@ -54,11 +54,16 @@ function getItemsToResumeHtmlFn(
 ) {
     return function (items: BaseItemDto[]) {
         const cardLayout = false;
+        // For videos, Continue Watching is primarily a series/movie selector.
+        // Keep landscape episode thumbnails when the user explicitly opts in.
+        const usePosters = mediaType === 'Video' && !useEpisodeImages;
         return cardBuilder.getCardsHtml({
             items: items,
-            preferThumb: true,
-            inheritThumb: !useEpisodeImages,
-            shape: (mediaType === 'Book') ?
+            preferThumb: !usePosters,
+            inheritThumb: !useEpisodeImages && !usePosters,
+            preferSeriesPoster: usePosters,
+            preferParentPoster: usePosters,
+            shape: (mediaType === 'Book' || usePosters) ?
                 getPortraitShape(enableOverflow) :
                 getBackdropShape(enableOverflow),
             overlayText: false,
