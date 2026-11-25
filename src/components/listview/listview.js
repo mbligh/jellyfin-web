@@ -194,6 +194,7 @@ export function getListViewHtml(options) {
 
     for (let i = 0, length = items.length; i < length; i++) {
         const item = items[i];
+        const seasonEpisode = !!options.widescreenEpisodeImages && item.Type === 'Episode';
 
         const safeOverviewHtml = item.Overview ?
             // eslint-disable-next-line sonarjs/disabled-auto-escaping
@@ -224,7 +225,7 @@ export function getListViewHtml(options) {
             }
         }
 
-        let cssClass = 'listItem';
+        let cssClass = seasonEpisode ? 'listItem listItem-seasonEpisode' : 'listItem';
 
         if (options.border || (options.highlight !== false && !layoutManager.tv)) {
             cssClass += ' listItem-border';
@@ -269,7 +270,7 @@ export function getListViewHtml(options) {
         }
 
         if (options.image !== false) {
-            const widescreenEpisodeImage = isLargeStyle && options.widescreenEpisodeImages && item.Type === 'Episode';
+            const widescreenEpisodeImage = isLargeStyle && seasonEpisode;
             const imageHeight = widescreenEpisodeImage ? Math.round(downloadWidth * 9 / 16) : downloadWidth;
             const imgUrl = options.imageSource === 'channel' ? getChannelImageUrl(item, downloadWidth) : getImageUrl(item, downloadWidth, imageHeight);
             let imageClass = isLargeStyle ? 'listItemImage listItemImage-large' : 'listItemImage';
@@ -424,7 +425,8 @@ export function getListViewHtml(options) {
             html += `<div class="${mediaInfoClass}">`;
             html += mediaInfo.getPrimaryMediaInfoHtml(item, {
                 episodeTitle: false,
-                originalAirDate: false,
+                originalAirDate: seasonEpisode,
+                endsAt: !seasonEpisode,
                 subtitles: false
 
             });

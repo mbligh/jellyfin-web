@@ -15,6 +15,9 @@ across its media library while retaining the existing episode-image option:
   the legacy 3:2 container, requesting 500x281-sized images rather than
   500x500 square crops. If an episode has no image, retain the existing
   fallback to the series/parent Primary image.
+- **Season episode metadata:** show the original air date when available,
+  omit the estimated playback end time, and cap descriptions at six lines
+  on desktop and narrow layouts. Preserve full descriptions on episode pages.
 - Keep the rest of Jellyfin Web unchanged and preserve existing settings.
 
 ## Implementation
@@ -30,6 +33,8 @@ across its media library while retaining the existing episode-image option:
   `listview.js` requests 16:9 scaled images for those rows, and
   `listview.scss` sets a responsive 16:9 container (including TV layout).
   Other large list thumbnails remain unchanged.
+- Reuse that season-only option to enable `originalAirDate`, disable `endsAt`,
+  and mark episode rows for a scoped six-line CSS clamp on both overview variants.
 - Node.js 24, npm 11+, `npm ci`, `npm run build:check`, and
   `npm run build:production` are only required to build the frontend.
   There are no Node/npm runtime dependencies.

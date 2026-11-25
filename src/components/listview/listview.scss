@@ -321,6 +321,23 @@
     margin-top: 0.2em;
 }
 
+// Limit season summaries on both desktop and narrow layouts without changing metadata.
+.listItem-seasonEpisode {
+    .listItem-overview > bdi,
+    .listItem-bottomoverview > bdi {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        overflow: hidden;
+        line-height: 1.2em;
+        max-height: 7.2em;
+
+        p {
+            margin: 0;
+        }
+    }
+}
+
 @media all and (max-width: 50em) {
     .listItem .endsAt,
     .listItem .criticRating,
