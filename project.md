@@ -18,6 +18,8 @@ across its media library while retaining the existing episode-image option:
 - **Season episode metadata:** show the original air date when available,
   omit the estimated playback end time, and cap descriptions at six lines
   on desktop and narrow layouts. Preserve full descriptions on episode pages.
+- Restore cached and asynchronously loaded episode thumbnails without losing
+  the blurhash placeholder on failed requests (upstream PR #8824).
 - Keep the rest of Jellyfin Web unchanged and preserve existing settings.
 
 ## Implementation
@@ -35,6 +37,9 @@ across its media library while retaining the existing episode-image option:
   Other large list thumbnails remain unchanged.
 - Reuse that season-only option to enable `originalAirDate`, disable `endsAt`,
   and mark episode rows for a scoped six-line CSS clamp on both overview variants.
+- Backport the lazy image loader fix from upstream PR #8824 (superseding
+  #8010), with regression tests for synchronous and asynchronous loading,
+  failed images, duplicate load events, scrolling, and fast fade-in.
 - Node.js 24, npm 11+, `npm ci`, `npm run build:check`, and
   `npm run build:production` are only required to build the frontend.
   There are no Node/npm runtime dependencies.
