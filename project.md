@@ -20,6 +20,8 @@ across its media library while retaining the existing episode-image option:
   on desktop and narrow layouts. Preserve full descriptions on episode pages.
 - Restore cached and asynchronously loaded episode thumbnails without losing
   the blurhash placeholder on failed requests (upstream PR #8824).
+- Disable mouse wheel and trackpad scroll volume control during video
+  playback by default, with a per-user opt-in under Playback settings.
 - Keep the rest of Jellyfin Web unchanged and preserve existing settings.
 
 ## Implementation
@@ -40,6 +42,9 @@ across its media library while retaining the existing episode-image option:
 - Backport the lazy image loader fix from upstream PR #8824 (superseding
   #8010), with regression tests for synchronous and asynchronous loading,
   failed images, duplicate load events, scrolling, and fast fade-in.
+- Store `enableScrollWheelVolumeControl` in the existing per-user display
+  preferences (default false). Bind the Playback settings checkbox to it,
+  and guard the video OSD wheel handler without changing other controls.
 - Node.js 24, npm 11+, `npm ci`, `npm run build:check`, and
   `npm run build:production` are only required to build the frontend.
   There are no Node/npm runtime dependencies.

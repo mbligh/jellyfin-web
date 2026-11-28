@@ -315,6 +315,7 @@
     "EnableHi10pHelp": "Enable to avoid transcoding H.264 10-bit videos. Disable this option if the video displays blank frames.",
     "EnableLibrary": "Enable the library",
     "EnableLibraryHelp": "Disabling the library will hide it from all user views.",
+    "EnableScrollWheelVolumeControl": "Enable scroll wheel volume control",
     "EnableNextVideoInfoOverlay": "Show next video info during playback",
     "EnableNextVideoInfoOverlayHelp": "At the end of a video, display info about the next video coming up in the current playlist.",
     "EnablePhotos": "Display the photos",

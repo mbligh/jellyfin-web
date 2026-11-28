@@ -393,6 +393,19 @@ export class UserSettings {
     }
 
     /**
+     * Get or set mouse wheel volume control during video playback.
+     * @param {boolean|undefined} [val] - Enable scroll wheel volume control.
+     * @return {boolean} Whether scroll wheel volume control is enabled.
+     */
+    enableScrollWheelVolumeControl(val) {
+        if (val !== undefined) {
+            return this.set('enableScrollWheelVolumeControl', val.toString(), true);
+        }
+
+        return toBoolean(this.get('enableScrollWheelVolumeControl', true), false);
+    }
+
+    /**
      * Get or set amount of rewind.
      * @param {number|undefined} val - Amount of rewind.
      * @return {number} Amount of rewind.
@@ -741,6 +754,7 @@ export const detailsBanner = currentSettings.detailsBanner.bind(currentSettings)
 export const useEpisodeImagesInNextUpAndResume = currentSettings.useEpisodeImagesInNextUpAndResume.bind(currentSettings);
 export const language = currentSettings.language.bind(currentSettings);
 export const dateTimeLocale = currentSettings.dateTimeLocale.bind(currentSettings);
+export const enableScrollWheelVolumeControl = currentSettings.enableScrollWheelVolumeControl.bind(currentSettings);
 export const skipBackLength = currentSettings.skipBackLength.bind(currentSettings);
 export const skipForwardLength = currentSettings.skipForwardLength.bind(currentSettings);
 export const dashboardTheme = currentSettings.dashboardTheme.bind(currentSettings);
