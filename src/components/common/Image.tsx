@@ -1,6 +1,5 @@
 import React, { type FC, useCallback, useState } from 'react';
 import { BlurhashCanvas } from 'react-blurhash';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import * as userSettings from '../../scripts/settings/userSettings';
 
@@ -21,33 +20,27 @@ interface ImageProps {
     containImage: boolean;
 }
 
-const Image: FC<ImageProps> = ({
+const ImageContent: FC<ImageProps> = ({
     imgUrl,
     blurhash,
     containImage
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [isTransitionComplete, setIsTransitionComplete] = useState(false);
-    const [isLoadStarted, setIsLoadStarted] = useState(false);
-
-    const fadeinDuration = userSettings.enableFastFadein() ? '0.1s' : '0.5s';
-    const transitionDuration = isLoaded ? fadeinDuration : 'none';
 
     const handleLoad = useCallback(() => {
         setIsLoaded(true);
     }, []);
 
-    const handleTransitionEnd = useCallback(() => {
-        setIsTransitionComplete(true);
-    }, []);
-
-    const handleLoadStarted = useCallback(() => {
-        setIsLoadStarted(true);
+    // A cached image may already be available when React attaches the ref.
+    const checkImage = useCallback((image: HTMLImageElement | null) => {
+        if (image?.complete && image.naturalWidth > 0) {
+            setIsLoaded(true);
+        }
     }, []);
 
     return (
         <div>
-            {!isTransitionComplete && isLoadStarted && blurhash && userSettings.enableBlurhash() && (
+            {!isLoaded && blurhash && userSettings.enableBlurhash() && (
                 <BlurhashCanvas
                     hash={blurhash}
                     width= {20}
@@ -60,22 +53,23 @@ const Image: FC<ImageProps> = ({
                     }}
                 />
             )}
-            <LazyLoadImage
-                key={imgUrl}
+            <img
+                ref={checkImage}
+                loading='lazy'
+                alt=''
                 src={imgUrl}
                 style={{
                     ...imageStyle,
-                    objectFit: containImage ? 'contain' : 'cover',
-                    opacity: isLoaded ? 1 : 0,
-                    transition: transitionDuration
+                    objectFit: containImage ? 'contain' : 'cover'
                 }}
                 onLoad={handleLoad}
-                onTransitionEnd={handleTransitionEnd}
-                beforeLoad={handleLoadStarted}
             />
 
         </div>
     );
 };
+
+// Reset the placeholder when a card is reused for a different image.
+const Image: FC<ImageProps> = (props) => <ImageContent key={props.imgUrl} {...props} />;
 
 export default Image;

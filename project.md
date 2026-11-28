@@ -22,6 +22,7 @@ across its media library while retaining the existing episode-image option:
   the blurhash placeholder on failed requests (upstream PR #8824).
 - Disable mouse wheel and trackpad scroll volume control during video
   playback by default, with a per-user opt-in under Playback settings.
+- Load modern React library card images reliably, including the Episodes grid.
 - Keep the rest of Jellyfin Web unchanged and preserve existing settings.
 
 ## Implementation
@@ -45,6 +46,10 @@ across its media library while retaining the existing episode-image option:
 - Store `enableScrollWheelVolumeControl` in the existing per-user display
   preferences (default false). Bind the Playback settings checkbox to it,
   and guard the video OSD wheel handler without changing other controls.
+- Use native browser lazy loading in the modern React `Image.tsx` card
+  component. Keep the blurhash behind the image until it loads; do not gate
+  image visibility or placeholder removal on a fade transition. Reset image
+  state on URL changes and recognize already-loaded cached images.
 - Node.js 24, npm 11+, `npm ci`, `npm run build:check`, and
   `npm run build:production` are only required to build the frontend.
   There are no Node/npm runtime dependencies.
