@@ -12,14 +12,14 @@ describe('getDefaultViewIndex', () => {
     const libraryId = 'youtube-library';
 
     beforeEach(() => {
-        vi.mocked(userSettings.get).mockReset();
+        vi.mocked(userSettings.get).mockReset().mockReturnValue(null);
     });
 
     it('uses the server-aware preference for the library landing tab', () => {
         vi.mocked(userSettings.get).mockImplementation((key, enableOnServer) => {
             return key === 'landing-' + libraryId && enableOnServer !== false
                 ? 'episodes'
-                : undefined;
+                : null;
         });
 
         expect(getDefaultViewIndex('/tv', libraryId)).toBe(5);
